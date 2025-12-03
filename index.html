@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/src/style.css" rel="stylesheet" />
+    <title>waterfall</title>
+  </head>
+  <body class="bg-black text-bland h-screen w-screen">
+    <div id="app">
+      <!-- Navigation Menu -->
+      <nav class="p-3 flex justify-between items-center">
+        <button class="icon-button"><i data-lucide="globe"></i></button>
+        <button class="icon-button"><i data-lucide="rotate-ccw"></i></button>
+      </nav>
+      <div
+        class="aspect-96/149 w-48 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+      >
+        <img
+          src="/assets/cards/2-of-spades.png"
+          alt="Current Card"
+          class="w-full h-auto object-cover rotate-15 user-select-none"
+        />
+      </div>
+
+      <!-- Counter -->
+      <div
+        class="text-dead font-body counter-separator flex items-center gap-[1.188rem] w-fit text-center text-base fixed bottom-5 left-1/2 -translate-x-1/2 select-none"
+      >
+        <span>5</span>
+        <span>48</span>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
