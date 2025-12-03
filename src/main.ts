@@ -46,9 +46,6 @@ function updateCounter(): void {
   counterTotal.textContent = String(deck.remaining);
 }
 
-// Import back image
-import deckBack from "./assets/deck-back.png";
-
 // Track cumulative rotation
 let rotation = 0;
 
@@ -64,39 +61,28 @@ async function flipAndDraw(): Promise<void> {
 
   isAnimating = true;
 
-  // FLIP 1: current card → back (rotate -180, left direction)
-  await animate(
-    cardElement,
-    { transform: `rotateY(${rotation - 90}deg)` },
-    { duration: 0.12, ease: [0.4, 0, 1, 1] }
-  ).finished;
-
-  cardFront.src = deckBack;
-
+  // FLIP 1: front → back (continuous left rotation)
+  const startRotation1 = rotation;
   rotation -= 180;
   await animate(
     cardElement,
-    { transform: `rotateY(${rotation}deg)` },
-    { duration: 0.12, ease: [0, 0, 0.2, 1] }
+    { transform: [`rotateY(${startRotation1}deg)`, `rotateY(${rotation}deg)`] },
+    { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
   ).finished;
 
-  // Pause to show back
-  await new Promise((resolve) => setTimeout(resolve, 150));
-
-  // FLIP 2: back → new card (rotate another -180, same left direction)
-  await animate(
-    cardElement,
-    { transform: `rotateY(${rotation - 90}deg)` },
-    { duration: 0.12, ease: [0.4, 0, 1, 1] }
-  ).finished;
-
+  // Update front image while hidden (backface-visibility handles visibility)
   cardFront.src = nextCard.image;
 
+  // Pause to show deck back
+  await new Promise((resolve) => setTimeout(resolve, 180));
+
+  // FLIP 2: back → new front (continue left rotation)
+  const startRotation2 = rotation;
   rotation -= 180;
   await animate(
     cardElement,
-    { transform: `rotateY(${rotation}deg)` },
-    { duration: 0.12, ease: [0, 0, 0.2, 1] }
+    { transform: [`rotateY(${startRotation2}deg)`, `rotateY(${rotation}deg)`] },
+    { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
   ).finished;
 
   updateCounter();
