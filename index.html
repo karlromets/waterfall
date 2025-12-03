@@ -15,13 +15,20 @@
         <button class="icon-button"><i data-lucide="rotate-ccw"></i></button>
       </nav>
       <div
-        class="aspect-96/149 w-48 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        class="card-container aspect-96/149 w-48 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-15"
       >
-        <img
-          src="/assets/cards/2-of-spades.png"
-          alt="Current Card"
-          class="w-full h-auto object-cover rotate-15 user-select-none"
-        />
+        <div class="card">
+          <img
+            src="/assets/cards/2-of-spades.png"
+            alt="Current Card"
+            class="card-face card-front w-full h-auto object-cover"
+          />
+          <img
+            src="/src/assets/deck-back.png"
+            alt="Card Back"
+            class="card-face card-back w-full h-auto object-cover"
+          />
+        </div>
       </div>
 
       <!-- Counter -->
