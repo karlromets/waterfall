@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#000000" />
     <link href="/src/style.css" rel="stylesheet" />
     <title>Waterfall</title>
   </head>
@@ -18,7 +18,23 @@
       <div
         class="card-container aspect-96/149 w-48 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-15"
       >
-        <div class="card">
+        <!-- Card A (active initially) -->
+        <div class="card card-a">
+          <img
+            src="/assets/cards/2-of-spades.png"
+            alt="Current Card"
+            class="card-face card-front w-full h-auto object-cover"
+            draggable="false"
+          />
+          <img
+            src="/src/assets/deck-back.png"
+            alt="Card Back"
+            class="card-face card-back w-full h-auto object-cover"
+            draggable="false"
+          />
+        </div>
+        <!-- Card B (hidden initially, used for alternating flip) -->
+        <div class="card card-b" style="visibility: hidden">
           <img
             src="/assets/cards/2-of-spades.png"
             alt="Current Card"

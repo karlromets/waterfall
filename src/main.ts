@@ -23,8 +23,13 @@ createIcons({
 // DOM elements
 const cardContainer =
   document.querySelector<HTMLDivElement>(".card-container")!;
-const cardElement = document.querySelector<HTMLDivElement>(".card")!;
-const cardFront = document.querySelector<HTMLImageElement>(".card-front")!;
+
+// Two card elements for alternating flip (Safari workaround for >180° rotation bug)
+const cardA = document.querySelector<HTMLDivElement>(".card-a")!;
+const cardB = document.querySelector<HTMLDivElement>(".card-b")!;
+const cardFrontA = cardA.querySelector<HTMLImageElement>(".card-front")!;
+const cardFrontB = cardB.querySelector<HTMLImageElement>(".card-front")!;
+
 const counterCurrent = document.querySelector<HTMLSpanElement>(
   ".counter-separator span:first-child"
 )!;
@@ -40,14 +45,12 @@ const deck = new Deck(cardImages);
 
 // Animation state
 let isAnimating = false;
+let activeCard: "A" | "B" = "A";
 
 function updateCounter(): void {
   counterCurrent.textContent = String(deck.position);
   counterTotal.textContent = String(deck.remaining);
 }
-
-// Track cumulative rotation
-let rotation = 0;
 
 async function flipAndDraw(): Promise<void> {
   if (isAnimating) return;
@@ -61,29 +64,39 @@ async function flipAndDraw(): Promise<void> {
 
   isAnimating = true;
 
-  // FLIP 1: front → back (continuous left rotation)
-  const startRotation1 = rotation;
-  rotation -= 180;
+  // Get current and next card elements
+  const current = activeCard === "A" ? cardA : cardB;
+  const next = activeCard === "A" ? cardB : cardA;
+  const nextFront = activeCard === "A" ? cardFrontB : cardFrontA;
+
+  // FLIP 1: current card 0° → -180° (shows deck back)
   await animate(
-    cardElement,
-    { transform: [`rotateY(${startRotation1}deg)`, `rotateY(${rotation}deg)`] },
+    current,
+    { transform: ["rotateY(0deg)", "rotateY(-180deg)"] },
     { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
   ).finished;
 
-  // Update front image while hidden (backface-visibility handles visibility)
-  cardFront.src = nextCard.image;
+  // Prep next card: set new image, position at +180° (back visible), show it
+  nextFront.src = nextCard.image;
+  next.style.transform = "rotateY(180deg)";
+  next.style.visibility = "visible";
+  current.style.visibility = "hidden";
 
   // Pause to show deck back
-  await new Promise((resolve) => setTimeout(resolve, 180));
+  await new Promise((r) => setTimeout(r, 180));
 
-  // FLIP 2: back → new front (continue left rotation)
-  const startRotation2 = rotation;
-  rotation -= 180;
+  // FLIP 2: next card +180° → 0° (continuous left rotation visually)
   await animate(
-    cardElement,
-    { transform: [`rotateY(${startRotation2}deg)`, `rotateY(${rotation}deg)`] },
+    next,
+    { transform: ["rotateY(180deg)", "rotateY(0deg)"] },
     { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
   ).finished;
+
+  // Reset current card to 0° for next cycle
+  current.style.transform = "rotateY(0deg)";
+
+  // Swap active card
+  activeCard = activeCard === "A" ? "B" : "A";
 
   updateCounter();
   isAnimating = false;
@@ -92,7 +105,7 @@ async function flipAndDraw(): Promise<void> {
 // Initial draw (no animation)
 const initialCard = deck.draw();
 if (initialCard) {
-  cardFront.src = initialCard.image;
+  cardFrontA.src = initialCard.image;
   updateCounter();
 }
 
