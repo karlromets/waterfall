@@ -46,7 +46,10 @@
   --text-base: 0.688rem;
   --text-xl: 2.25rem;
 
-  --inset-shadow-border: inset 0 0 0 2px var(--color-border);
+  --inset-shadow-border: 0 0 0 2px var(--color-border) inset;
+
+  --radius-default: 0.75rem;
+  --radius-large: 1.5rem;
 }
 
 html {
