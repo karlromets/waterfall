@@ -67,6 +67,19 @@ export class Deck {
     return this.cards[this.currentIndex++];
   }
 
+  /** Peek at the next n cards without drawing them */
+  peek(count: number): Card[] {
+    const result: Card[] = [];
+    for (
+      let i = 0;
+      i < count && this.currentIndex + i < this.cards.length;
+      i++
+    ) {
+      result.push(this.cards[this.currentIndex + i]);
+    }
+    return result;
+  }
+
   get remaining(): number {
     return this.cards.length - this.currentIndex;
   }

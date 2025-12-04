@@ -58,6 +58,17 @@ const deck = new Deck(cardImages);
 let isAnimating = false;
 let activeCard: "A" | "B" = "A";
 
+// Preload upcoming card images (3 cards ahead)
+const PRELOAD_COUNT = 3;
+function preloadUpcomingCards(): void {
+  const upcoming = deck.peek(PRELOAD_COUNT);
+  for (const card of upcoming) {
+    const img = new Image();
+    img.src = card.image;
+    img.decode().catch(() => {});
+  }
+}
+
 function updateCounter(): void {
   counterCurrent.textContent = String(deck.position);
   counterTotal.textContent = String(deck.remaining);
@@ -75,6 +86,11 @@ async function flipAndDraw(): Promise<void> {
 
   isAnimating = true;
 
+  // Start decoding next card image (will complete during first flip)
+  const img = new Image();
+  img.src = nextCard.image;
+  const decodePromise = img.decode().catch(() => {});
+
   // Get current and next card elements
   const current = activeCard === "A" ? cardA : cardB;
   const next = activeCard === "A" ? cardB : cardA;
@@ -86,6 +102,9 @@ async function flipAndDraw(): Promise<void> {
     { transform: ["rotateY(0deg)", "rotateY(-180deg)"] },
     { duration: 0.5, ease: easeOut }
   ).finished;
+
+  // Wait for decode to complete (should already be done after 0.5s flip)
+  await decodePromise;
 
   // Prep next card: set new image, position at +180° (back visible), show it
   nextFront.src = nextCard.image;
@@ -110,6 +129,7 @@ async function flipAndDraw(): Promise<void> {
   activeCard = activeCard === "A" ? "B" : "A";
 
   updateCounter();
+  preloadUpcomingCards();
   isAnimating = false;
 }
 
@@ -119,16 +139,22 @@ async function shuffleAndDraw(): Promise<void> {
 
   deck.reset();
 
-  const current = activeCard === "A" ? cardA : cardB;
-  const next = activeCard === "A" ? cardB : cardA;
-  const nextFront = activeCard === "A" ? cardFrontB : cardFrontA;
-
   // Draw first card now so we can set it up
   const nextCard = deck.draw();
   if (!nextCard) {
     isAnimating = false;
     return;
   }
+
+  // Start decoding next card image (will complete during first flip)
+  const img = new Image();
+  img.src = nextCard.image;
+  const decodePromise = img.decode().catch(() => {});
+
+  // Get current and next card elements
+  const current = activeCard === "A" ? cardA : cardB;
+  const next = activeCard === "A" ? cardB : cardA;
+  const nextFront = activeCard === "A" ? cardFrontB : cardFrontA;
 
   // STEP 1: Flip current card to show deck back
   await animate(
@@ -153,6 +179,9 @@ async function shuffleAndDraw(): Promise<void> {
   // Reset to just rotateY for clean state
   current.style.transform = "rotateY(-180deg)";
 
+  // Now wait for decode before revealing
+  await decodePromise;
+
   // STEP 3: Prep next card and flip to reveal
   nextFront.src = nextCard.image;
   next.style.transform = "rotateY(180deg)";
@@ -172,6 +201,7 @@ async function shuffleAndDraw(): Promise<void> {
   activeCard = activeCard === "A" ? "B" : "A";
 
   updateCounter();
+  preloadUpcomingCards();
   isAnimating = false;
 }
 
@@ -209,6 +239,7 @@ async function initialDraw(): Promise<void> {
   ).finished;
 
   updateCounter();
+  preloadUpcomingCards();
   isAnimating = false;
 }
 
