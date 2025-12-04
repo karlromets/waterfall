@@ -6,7 +6,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "lang.english": "english",
     "restart.title": "Segame kaardid uuesti ära?",
     "restart.content": "Praegune seis kaob ja alustame uuest ilusast pakist.",
-    "restart.no": "oops",
+    "restart.no": "ups",
     "restart.yes": "jap",
   },
   en: {
