@@ -4,8 +4,8 @@ const translations: Record<Lang, Record<string, string>> = {
   et: {
     "lang.estonian": "eesti",
     "lang.english": "english",
-    "restart.title": "Kas oled kindel, et soovid kaardid uuesti ära segada?",
-    "restart.content": "Praegune seis kaob ja alustame uuesti pakist.",
+    "restart.title": "Segame kaardid uuesti ära?",
+    "restart.content": "Praegune seis kaob ja alustame uuest ilusast pakist.",
     "restart.no": "oops",
     "restart.yes": "jap",
   },
@@ -13,7 +13,8 @@ const translations: Record<Lang, Record<string, string>> = {
     "lang.estonian": "eesti",
     "lang.english": "english",
     "restart.title": "Are you sure you want to restart?",
-    "restart.content": "This will result in your current game state being wiped.",
+    "restart.content":
+      "This will result in your current game state being wiped.",
     "restart.no": "oops",
     "restart.yes": "yeap",
   },

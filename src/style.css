@@ -94,6 +94,11 @@ html {
     @apply hover:bg-bland/10 active:bg-bland/5 focus-visible:bg-bland/5 focus-visible:outline-none focus-visible:[box-shadow:0_0_0_2px_var(--color-focus-outline)_inset] focus-visible:z-10 px-3 py-2.5 w-36 text-start font-body cursor-pointer select-none transition-colors;
   }
 
+  .button {
+    @apply px-3 py-2.5 w-full text-center font-body cursor-pointer select-none transition-colors text-bland bg-bland/5 hover:bg-bland/10 active:bg-bland/12.5 focus-visible:bg-bland/12.5 focus-visible:outline-none focus-visible:[box-shadow:0_0_0_2px_var(--color-focus-outline)_inset];
+    touch-action: manipulation;
+  }
+
   /* 3D Card Flip */
   .card-container {
     perspective: 1000px;

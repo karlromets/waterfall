@@ -2,6 +2,7 @@ import { createIcons, Globe, RotateCcw } from "lucide";
 import { Deck } from "./js/deck";
 import { easeOut, press, spring, animate } from "motion";
 import "./js/language";
+import { setOnConfirm } from "./js/modal";
 
 // Glob import all card images
 const cardModules = import.meta.glob<{ default: string }>(
@@ -35,9 +36,6 @@ const counterCurrent = document.querySelector<HTMLSpanElement>(
 )!;
 const counterTotal = document.querySelector<HTMLSpanElement>(
   ".counter-separator span:last-child"
-)!;
-const resetButton = document.querySelector<HTMLButtonElement>(
-  'button:has([data-lucide="rotate-ccw"])'
 )!;
 
 // Initialize deck
@@ -102,6 +100,68 @@ async function flipAndDraw(): Promise<void> {
   isAnimating = false;
 }
 
+async function shuffleAndDraw(): Promise<void> {
+  if (isAnimating) return;
+  isAnimating = true;
+
+  deck.reset();
+
+  const current = activeCard === "A" ? cardA : cardB;
+  const next = activeCard === "A" ? cardB : cardA;
+  const nextFront = activeCard === "A" ? cardFrontB : cardFrontA;
+
+  // Draw first card now so we can set it up
+  const nextCard = deck.draw();
+  if (!nextCard) {
+    isAnimating = false;
+    return;
+  }
+
+  // STEP 1: Flip current card to show deck back
+  await animate(
+    current,
+    { transform: ["rotateY(0deg)", "rotateY(-180deg)"] },
+    { duration: 0.5, ease: easeOut }
+  ).finished;
+
+  // STEP 2: Spin the card 360° on Z-axis (shuffle effect) with spring physics
+  // Animate the card itself, combining rotateY(-180deg) with rotateZ spin
+  await animate(
+    current,
+    {
+      transform: [
+        "rotateY(-180deg) rotateZ(0deg)",
+        "rotateY(-180deg) rotateZ(360deg)",
+      ],
+    },
+    { type: spring, stiffness: 80, damping: 12 } // ~0.75s with spring bounce
+  ).finished;
+
+  // Reset to just rotateY for clean state
+  current.style.transform = "rotateY(-180deg)";
+
+  // STEP 3: Prep next card and flip to reveal
+  nextFront.src = nextCard.image;
+  next.style.transform = "rotateY(180deg)";
+  next.style.visibility = "visible";
+  current.style.visibility = "hidden";
+
+  await new Promise((r) => setTimeout(r, 180));
+
+  // Flip to reveal new card
+  await animate(
+    next,
+    { transform: ["rotateY(180deg)", "rotateY(0deg)"] },
+    { duration: 0.5, ease: easeOut }
+  ).finished;
+
+  current.style.transform = "rotateY(0deg)";
+  activeCard = activeCard === "A" ? "B" : "A";
+
+  updateCounter();
+  isAnimating = false;
+}
+
 // Initial draw (no animation)
 const initialCard = deck.draw();
 if (initialCard) {
@@ -110,12 +170,20 @@ if (initialCard) {
 }
 
 press(cardContainer, (element) => {
-  animate(element, { scale: 0.95 }, { type: spring, stiffness: 500, damping: 30 });
-  
+  animate(
+    element,
+    { scale: 0.95 },
+    { type: spring, stiffness: 500, damping: 30 }
+  );
+
   return async (_event, info) => {
     // Bounce back
-    await animate(element, { scale: 1 }, { type: spring, stiffness: 400, damping: 20 }).finished;
-    
+    await animate(
+      element,
+      { scale: 1 },
+      { type: spring, stiffness: 400, damping: 20 }
+    ).finished;
+
     // Then flip
     if (info.success) {
       flipAndDraw();
@@ -123,9 +191,9 @@ press(cardContainer, (element) => {
   };
 });
 
-// Reset button reshuffles
-resetButton.addEventListener("click", async () => {
+setOnConfirm(async () => {
   if (isAnimating) return;
-  deck.reset();
-  await flipAndDraw();
+  // Wait for modal close animation to finish, then shuffle
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  await shuffleAndDraw();
 });

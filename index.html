@@ -32,16 +32,28 @@
             style="transform: translateX(-120%); opacity: 0"
             hidden
           >
-            <button role="menuitem" class="language-button rounded-t-default" data-lang="et" data-i18n="lang.estonian">
+            <button
+              role="menuitem"
+              class="language-button rounded-t-default"
+              data-lang="et"
+              data-i18n="lang.estonian"
+            >
               eesti
             </button>
-            <button role="menuitem" class="language-button rounded-b-default" data-lang="en" data-i18n="lang.english">
+            <button
+              role="menuitem"
+              class="language-button rounded-b-default"
+              data-lang="en"
+              data-i18n="lang.english"
+            >
               english
             </button>
           </div>
         </div>
 
-        <button class="icon-button"><i data-lucide="rotate-ccw"></i></button>
+        <button class="icon-button" id="restart-toggle">
+          <i data-lucide="rotate-ccw"></i>
+        </button>
       </nav>
       <div
         class="card-container aspect-96/149 w-48 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-15"
@@ -84,6 +96,50 @@
       >
         <span>5</span>
         <span>48</span>
+      </div>
+
+      <!-- Modal -->
+      <div
+        id="restart-backdrop"
+        class="fixed inset-0 z-40"
+        style="opacity: 0; pointer-events: none"
+        hidden
+      ></div>
+
+      <div
+        id="restart-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="restart-title"
+        class="px-5 fixed w-full top-1/2 -translate-y-1/2 left-0 z-50"
+        style="opacity: 0; transform: translateY(-50%) scale(0.5)"
+        hidden
+      >
+        <div
+          class="bg-less-dead inset-shadow-border rounded-large p-5 flex flex-col gap-8"
+        >
+          <div
+            class="flex flex-col gap-3 items-center justify-center text-center"
+          >
+            <h2 class="text-xl font-heading" data-i18n="restart.title"></h2>
+            <p
+              class="text-base font-body text-dead"
+              data-i18n="restart.content"
+            ></p>
+          </div>
+          <div class="flex gap-2.5">
+            <button
+              id="restart-no"
+              class="button rounded-default text-dead"
+              data-i18n="restart.no"
+            ></button>
+            <button
+              id="restart-yes"
+              class="button rounded-default"
+              data-i18n="restart.yes"
+            ></button>
+          </div>
+        </div>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
