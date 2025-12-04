@@ -175,12 +175,44 @@ async function shuffleAndDraw(): Promise<void> {
   isAnimating = false;
 }
 
-// Initial draw (no animation)
-const initialCard = deck.draw();
-if (initialCard) {
+// Initial draw with flip animation (simulates drawing first card)
+async function initialDraw(): Promise<void> {
+  const initialCard = deck.draw();
+  if (!initialCard) return;
+
+  isAnimating = true;
+
+  // Preload the first card image
+  const img = new Image();
+  img.src = initialCard.image;
+
+  await new Promise<void>((resolve) => {
+    if (img.complete) {
+      resolve();
+    } else {
+      img.onload = () => resolve();
+      img.onerror = () => resolve(); // Continue even if image fails
+    }
+  });
+
+  // Set the image (now cached)
   cardFrontA.src = initialCard.image;
+
+  // Brief pause showing deck back
+  await new Promise((r) => setTimeout(r, 180));
+
+  // Flip to reveal the card (180° → 0°)
+  await animate(
+    cardA,
+    { transform: ["rotateY(180deg)", "rotateY(0deg)"] },
+    { duration: 0.5, ease: easeOut }
+  ).finished;
+
   updateCounter();
+  isAnimating = false;
 }
+
+initialDraw();
 
 press(cardContainer, (element) => {
   animate(
