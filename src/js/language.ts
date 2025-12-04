@@ -1,5 +1,4 @@
-import { animate } from "motion/mini";
-import { press, spring } from "motion";
+import { animate, press, spring } from "motion";
 import { setLanguage, initI18n } from "./i18n.ts";
 
 const languageToggle =

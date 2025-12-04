@@ -1,7 +1,6 @@
 import { createIcons, Globe, RotateCcw } from "lucide";
 import { Deck } from "./js/deck";
-import { animate } from "motion/mini";
-import { easeOut, press, spring } from "motion";
+import { easeOut, press, spring, animate } from "motion";
 import "./js/language";
 
 // Glob import all card images
