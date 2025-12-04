@@ -3,6 +3,8 @@ import { Deck } from "./js/deck";
 import { easeOut, press, spring, animate } from "motion";
 import "./js/language";
 import { setOnConfirm } from "./js/modal";
+import { optimizeImageUrl, optimizeImageRecord } from "./js/imageOptimizer";
+import deckBackUrl from "./assets/deck-back.png";
 
 // Glob import all card images
 const cardModules = import.meta.glob<{ default: string }>(
@@ -10,11 +12,15 @@ const cardModules = import.meta.glob<{ default: string }>(
   { eager: true }
 );
 
-// Flatten to { path: resolvedUrl }
-const cardImages: Record<string, string> = {};
+// Flatten to { path: resolvedUrl } and optimize for production
+const rawCardImages: Record<string, string> = {};
 for (const [path, module] of Object.entries(cardModules)) {
-  cardImages[path] = module.default;
+  rawCardImages[path] = module.default;
 }
+const cardImages = optimizeImageRecord(rawCardImages);
+
+// Optimized deck back URL
+const optimizedDeckBack = optimizeImageUrl(deckBackUrl);
 
 // Initialize icons
 createIcons({
@@ -30,6 +36,12 @@ const cardA = document.querySelector<HTMLDivElement>(".card-a")!;
 const cardB = document.querySelector<HTMLDivElement>(".card-b")!;
 const cardFrontA = cardA.querySelector<HTMLImageElement>(".card-front")!;
 const cardFrontB = cardB.querySelector<HTMLImageElement>(".card-front")!;
+const cardBackA = cardA.querySelector<HTMLImageElement>(".card-back")!;
+const cardBackB = cardB.querySelector<HTMLImageElement>(".card-back")!;
+
+// Set optimized deck-back images
+cardBackA.src = optimizedDeckBack;
+cardBackB.src = optimizedDeckBack;
 
 const counterCurrent = document.querySelector<HTMLSpanElement>(
   ".counter-separator span:first-child"
