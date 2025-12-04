@@ -1,7 +1,7 @@
 import { createIcons, Globe, RotateCcw } from "lucide";
 import { Deck } from "./js/deck";
 import { animate } from "motion/mini";
-import { press } from "motion";
+import { easeOut, press } from "motion";
 
 // Glob import all card images
 const cardModules = import.meta.glob<{ default: string }>(
@@ -73,7 +73,7 @@ async function flipAndDraw(): Promise<void> {
   await animate(
     current,
     { transform: ["rotateY(0deg)", "rotateY(-180deg)"] },
-    { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
+    { duration: 0.5, ease: easeOut }
   ).finished;
 
   // Prep next card: set new image, position at +180° (back visible), show it
@@ -89,7 +89,7 @@ async function flipAndDraw(): Promise<void> {
   await animate(
     next,
     { transform: ["rotateY(180deg)", "rotateY(0deg)"] },
-    { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
+    { duration: 0.5, ease: easeOut }
   ).finished;
 
   // Reset current card to 0° for next cycle
