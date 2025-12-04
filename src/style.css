@@ -83,7 +83,7 @@ html {
   }
 
   .icon-button {
-    @apply text-dead hover:text-bland focus-visible:text-bland active:text-bland focus-visible:outline-none cursor-pointer;
+    @apply text-dead hover:text-bland focus-visible:text-bland active:text-bland focus-visible:outline-none transition-colors cursor-pointer;
     touch-action: manipulation;
     &:focus-visible svg {
       @apply filter-[drop-shadow(1px_1px_0px_#2F8AF9)];
