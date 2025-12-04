@@ -20,8 +20,8 @@ async function openMenu(): Promise<void> {
 
   await animate(
     languageMenu,
-    { transform: "translateX(0%)", opacity: 1 },
-    { type: spring, stiffness: 400, damping: 30 }
+    { x: 0, opacity: 1 },
+    { type: "spring", stiffness: 400, damping: 30 }
   ).finished;
 
   menuAnimating = false;
@@ -36,8 +36,8 @@ async function closeMenu(): Promise<void> {
 
   await animate(
     languageMenu,
-    { transform: "translateX(-120%)", opacity: 0 },
-    { type: spring, stiffness: 300, damping: 35 }
+    { x: "-120%", opacity: 0 },
+    { type: "spring", stiffness: 300, damping: 35 }
   ).finished;
 
   languageMenu.hidden = true;
@@ -48,12 +48,12 @@ async function selectLanguage(lang: "et" | "en"): Promise<void> {
   if (menuAnimating) return;
   menuAnimating = true;
 
-  // Bounce scale
+  // 2. Bounce back up (with slight overshoot from spring)
   await animate(
     languageMenu,
-    { transform: "translateX(0%) scale(0.95)" },
-    { type: spring, stiffness: 500, damping: 30 }
-  ).finished;
+    { scale: 1 },
+    { type: spring, stiffness: 400, damping: 20 }
+  );
 
   // Apply language
   setLanguage(lang);
@@ -64,8 +64,8 @@ async function selectLanguage(lang: "et" | "en"): Promise<void> {
 
   await animate(
     languageMenu,
-    { transform: "translateX(-120%) scale(1)", opacity: 0 },
-    { type: spring, stiffness: 300, damping: 35 }
+    { x: "-120%", opacity: 0 },
+    { type: "spring", stiffness: 300, damping: 30 }
   ).finished;
 
   languageMenu.hidden = true;
@@ -76,7 +76,16 @@ async function selectLanguage(lang: "et" | "en"): Promise<void> {
 languageButtons.forEach((btn) => {
   press(btn, () => {
     const lang = btn.getAttribute("data-lang") as "et" | "en";
-    selectLanguage(lang);
+
+    animate(
+      languageMenu,
+      { scale: 0.95 },
+      { type: spring, stiffness: 500, damping: 30 }
+    );
+
+    return async () => {
+      selectLanguage(lang);
+    };
   });
 });
 
