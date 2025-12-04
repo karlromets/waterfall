@@ -2,6 +2,7 @@ import { createIcons, Globe, RotateCcw } from "lucide";
 import { Deck } from "./js/deck";
 import { animate } from "motion/mini";
 import { easeOut, press } from "motion";
+import "./js/language";
 
 // Glob import all card images
 const cardModules = import.meta.glob<{ default: string }>(

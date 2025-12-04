@@ -11,8 +11,36 @@
   <body class="bg-black text-bland h-dvh w-screen">
     <div id="app">
       <!-- Navigation Menu -->
-      <nav class="p-3 flex justify-between items-center">
-        <button class="icon-button"><i data-lucide="globe"></i></button>
+      <nav class="p-3 flex justify-between items-center relative bg-black">
+        <button
+          class="icon-button"
+          aria-expanded="false"
+          aria-controls="language-menu"
+          id="language-toggle"
+        >
+          <i data-lucide="globe"></i>
+        </button>
+
+        <div
+          class="absolute bottom-0 translate-y-full w-fit pointer-events-none"
+        >
+          <div
+            id="language-menu"
+            role="menu"
+            aria-labelledby="language-toggle"
+            class="flex flex-col rounded-default bg-less-dead inset-shadow-border pointer-events-auto"
+            style="transform: translateX(-120%); opacity: 0"
+            hidden
+          >
+            <button role="menuitem" class="language-button rounded-t-default" data-lang="et" data-i18n="lang.estonian">
+              eesti
+            </button>
+            <button role="menuitem" class="language-button rounded-b-default" data-lang="en" data-i18n="lang.english">
+              english
+            </button>
+          </div>
+        </div>
+
         <button class="icon-button"><i data-lucide="rotate-ccw"></i></button>
       </nav>
       <div
