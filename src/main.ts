@@ -1,7 +1,7 @@
 import { createIcons, Globe, RotateCcw } from "lucide";
 import { Deck } from "./js/deck";
 import { animate } from "motion/mini";
-import { easeOut, press } from "motion";
+import { easeOut, press, spring } from "motion";
 import "./js/language";
 
 // Glob import all card images
@@ -110,13 +110,18 @@ if (initialCard) {
   updateCounter();
 }
 
-// Click card to advance with flip animation
-cardContainer.addEventListener("click", flipAndDraw);
-
-// Press scale effect
 press(cardContainer, (element) => {
-  animate(element, { scale: 0.95 });
-  return () => animate(element, { scale: 1 });
+  animate(element, { scale: 0.95 }, { type: spring, stiffness: 500, damping: 30 });
+  
+  return async (_event, info) => {
+    // Bounce back
+    await animate(element, { scale: 1 }, { type: spring, stiffness: 400, damping: 20 }).finished;
+    
+    // Then flip
+    if (info.success) {
+      flipAndDraw();
+    }
+  };
 });
 
 // Reset button reshuffles
