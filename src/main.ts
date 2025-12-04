@@ -2,6 +2,7 @@ import { createIcons, Globe, RotateCcw } from "lucide";
 import { Deck } from "./js/deck";
 import { easeOut, press, spring, animate } from "motion";
 import "./js/language";
+import "./js/sound";
 import { setOnConfirm } from "./js/modal";
 import { optimizeImageUrl, optimizeImageRecord } from "./js/imageOptimizer";
 import deckBackUrl from "./assets/deck-back.png";
