@@ -42,9 +42,6 @@ async function openModal(): Promise<void> {
 
   backdrop.style.pointerEvents = "auto";
 
-  // Focus first button
-  noBtn.focus();
-
   isAnimating = false;
 }
 
