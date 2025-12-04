@@ -210,3 +210,22 @@ setOnConfirm(async () => {
   await new Promise((resolve) => setTimeout(resolve, 300));
   await shuffleAndDraw();
 });
+
+// Preload Redaction 10 font after page load
+window.addEventListener("load", () => {
+  // Create a hidden element with the font applied to trigger font loading
+  const preloadElement = document.createElement("div");
+  preloadElement.style.fontFamily = '"Redaction 10", sans-serif';
+  preloadElement.style.fontWeight = "400";
+  preloadElement.style.position = "absolute";
+  preloadElement.style.visibility = "hidden";
+  preloadElement.style.height = "0";
+  preloadElement.style.overflow = "hidden";
+  preloadElement.textContent = ".";
+  document.body.appendChild(preloadElement);
+
+  // Remove the element after a short delay (font should be loaded by then)
+  setTimeout(() => {
+    document.body.removeChild(preloadElement);
+  }, 100);
+});
